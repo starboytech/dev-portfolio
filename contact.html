@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,800&family=Chakra+Petch:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Contact | Mo Yusuf</title>
+  </head>
+  <body>
+    <header>
+      <a class="logo" href="index.html">Mo Yusuf</a>
+      <nav>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="contact" class="page contact-page">
+        <h1 class="section-title page-title">Contact</h1>
+        <p class="contact-note">Have a question or a project idea? Send me a message.</p>
+        <div class="contact-buttons">
+          <a class="btn btn-main" href="https://github.com/starboytech" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+
+        <!-- FormSubmit (formsubmit.co) emails each message to me, no backend needed -->
+        <form class="contact-form" action="https://formsubmit.co/starboytech19@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from your portfolio" />
+
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-send">Send message</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2026 Mo Yusuf</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,811 @@
+/*
+	? DSEG7 - seven-segment font, like a motherboard's debug code display
+	* by keshikan, SIL Open Font License 1.1
+*/
+@font-face {
+  font-family: 'DSEG7 Classic';
+  src: url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/fonts/DSEG7-Classic/DSEG7Classic-Bold.woff2')
+    format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+/*
+	? Variables
+	* every colour on the site comes from here
+	* the circuit traces are drawn inside SVG images, so they spell out teal (%232ab7a9) themselves
+*/
+:root {
+  --color-bg: #14161a;
+  --color-bg-dark: #0f1114;
+  --color-bg-fade: rgba(20, 22, 26, 0.85);
+  --color-text: #e8e8e6;
+  --color-text-dim: #a4a7ab;
+  --color-line: #2a2d33;
+  --color-border: #30343b;
+  --color-pin: rgba(196, 199, 204, 0.55);
+  --color-teal: #2ab7a9;
+  --color-teal-light: #97e8dc;
+  --color-teal-line: rgba(42, 183, 169, 0.4);
+  --color-orange: #f2913d;
+  --color-orange-light: #ffd29c;
+  --color-glass: rgba(255, 255, 255, 0.04);
+  --color-glass-edge: rgba(255, 255, 255, 0.14);
+  --color-glass-shade: rgba(0, 0, 0, 0.55);
+
+  --font-heading: 'Source Serif 4', serif;
+  --font-body: 'Mona Sans', sans-serif;
+  --font-digital: 'Chakra Petch', sans-serif;
+  --font-numbers: 'DSEG7 Classic', monospace;
+
+  --gap-primary: 25px;
+  --gap-section: 100px;
+}
+
+/*
+	? Text sizes
+	* footer = 12pt, the smallest text
+	* labels = 14pt
+	* body and intro = 15pt
+*/
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15pt;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  line-height: 1.1;
+}
+
+p {
+  margin-bottom: 15px;
+}
+
+ul {
+  display: flex;
+  list-style-type: none;
+}
+
+/*
+	? Focus
+	* a teal outline shows which link or button the keyboard is on
+	* it shows straight away, with no fade
+*/
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-teal-light);
+  outline-offset: 4px;
+}
+
+/*
+	? Hardware details
+	* .pcb - faint circuit traces along the left edge, ending in vias (the round pads)
+*/
+.pcb {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='600' fill='none' stroke='%232ab7a9' stroke-opacity='0.2' stroke-width='1.5'><path d='M0 40H90L120 70V160'/><circle cx='120' cy='164' r='4'/><path d='M0 60H70L100 90V230L130 260H170'/><circle cx='174' cy='260' r='4'/><path d='M0 300H40L70 330V420'/><circle cx='70' cy='424' r='4'/><path d='M0 320H110L140 350V470L110 500V560'/><circle cx='110' cy='564' r='4'/><path d='M0 480H30'/><circle cx='34' cy='480' r='4'/></svg>");
+  background-repeat: repeat-y;
+  background-position: left top;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid var(--color-orange); /* orange line between the nav bar and the hero */
+  background-color: var(--color-bg);
+  font-size: 12pt; /* phones: small enough for the name and all three links to fit on one row */
+}
+
+header a {
+  color: var(--color-orange);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.logo {
+  flex-shrink: 0; /* the name never squeezes onto two lines */
+}
+
+nav ul {
+  gap: 15px;
+}
+
+/*
+	? Sliding underline
+	* the underline is a 1px tall background image
+	* it starts at 0 width and grows to 100% on hover
+*/
+nav a {
+  font-weight: 400;
+  background: linear-gradient(var(--color-orange), var(--color-orange))
+    no-repeat left bottom;
+  background-size: 0 1px;
+  transition:
+    background-size 0.3s,
+    color 0.3s;
+}
+
+nav a:hover {
+  background-size: 100% 1px;
+  color: var(--color-orange-light);
+}
+
+/* Hero */
+#hero {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 15px;
+
+  /* centre the hero text left to right */
+  align-items: center;
+  text-align: center;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.3);
+}
+
+#hero::after {
+  /* dark vignette so the edges fade out */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    var(--color-bg) 95%
+  );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+#hero h1 {
+  font-size: 56px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: var(--gap-primary);
+}
+
+/* the professional title under the name */
+.hero-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 26px; /* one line on a phone; bigger from tablet up */
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin: -10px 0 20px;
+}
+
+/* the intro's width limit should not squeeze the title onto two lines */
+#hero .hero-title {
+  max-width: none;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  margin-right: 10px;
+  border: 1px solid var(--color-teal);
+  color: var(--color-teal);
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+/* hover only changes colour: each button moves to the light shade of its own colour */
+.btn:hover {
+  border-color: var(--color-teal-light);
+  color: var(--color-teal-light);
+}
+
+.btn-main {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+  color: var(--color-bg);
+}
+
+.btn-main:hover {
+  background-color: var(--color-orange-light);
+  border-color: var(--color-orange-light);
+  color: var(--color-bg);
+}
+
+/* Sections */
+section {
+  padding: var(--gap-section) 15px;
+}
+
+/* page headings (About, Projects, Contact) are white */
+.section-title {
+  font-size: 40px;
+  font-weight: 600; /* lighter than the name on the hero (800), so only the name is heavy */
+  margin-bottom: 50px;
+  color: var(--color-text);
+}
+
+/*
+	? Glass pane
+	* sits on top of the hero video and under the text
+	* backdrop-filter blurs the video behind it, like looking through glass
+	* the inset shadows give the glass an edge and darken its corners
+*/
+.glass {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
+  backdrop-filter: blur(4px) saturate(120%);
+  background-color: var(--color-glass);
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-edge),
+    inset 0 0 150px var(--color-glass-shade);
+}
+
+/*
+	? Projects background
+	* a hardware photo (Alexandre Debiève, Unsplash), covering the whole page at half strength
+*/
+#projects::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/projects-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.5;
+  filter: saturate(0.6) brightness(0.8); /* cooler and darker, more like cold metal */
+  pointer-events: none;
+}
+
+/*
+	? Overlay on top of the photo, under the content
+	* an oval of near-black behind the heading, so the photo frames it
+	* the top and bottom edges fade into the page colour near the nav and footer
+*/
+#projects::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 55% 50% at center,
+      var(--color-bg-fade) 30%,
+      transparent 75%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-bg) 0%,
+      transparent 18%,
+      transparent 82%,
+      var(--color-bg) 100%
+    );
+  pointer-events: none;
+}
+
+/* Projects */
+#projects {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#projects > * {
+  position: relative;
+  z-index: 1; /* above the photo and its overlay */
+}
+
+/*
+	? About and Contact pages
+	* content is centred top to bottom, so there is no empty gap at the bottom
+*/
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page > * {
+  width: 100%; /* full container width, so headings line up with the text below them */
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-title {
+  font-weight: 600;
+  font-size: 56px;
+  margin-bottom: 3vh;
+  text-transform: none;
+}
+
+.about-text {
+  max-width: 650px;
+  font-size: 15pt;
+}
+
+.readouts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/*
+	? Readout = an LED panel
+	* a dark panel with a quiet border, like a display on a board
+*/
+.readout {
+  background-color: var(--color-bg-dark);
+  border: 1px solid var(--color-line);
+  padding: 15px 20px;
+  transition: border-color 0.2s;
+}
+
+/* hover: the border turns teal and the grey text turns white */
+.readout:hover {
+  border-color: var(--color-teal);
+}
+
+.readout:hover .readout-label,
+.readout:hover .readout-sub {
+  color: var(--color-text);
+}
+
+.readout p {
+  margin: 0;
+}
+
+.readout-label {
+  font-family: var(--font-digital);
+  font-size: 14pt;
+  letter-spacing: 0.2em;
+  color: var(--color-text-dim);
+  transition: color 0.2s;
+}
+
+/*
+	? Digital numbers (14, DEC 2026)
+	* DSEG7 draws each character with seven segments, like an LED display on a motherboard
+	* seven segments can only draw some letters, so DEC shows as dEc, as on real hardware
+*/
+.stat {
+  font-family: var(--font-numbers);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-teal);
+}
+
+.readout-text {
+  font-family: var(--font-digital);
+  font-size: 15pt;
+  color: var(--color-orange);
+  margin-top: 5px;
+}
+
+.readout-sub {
+  font-size: 14pt;
+  color: var(--color-text-dim);
+  transition: color 0.2s;
+}
+
+/* Contact: the About page's circuit traces, on the left side only */
+#contact {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='600' fill='none' stroke='%232ab7a9' stroke-opacity='0.38' stroke-width='1.6'><g><path d='M0 40H90L120 70V160'/><circle cx='120' cy='164' r='4'/><path d='M0 60H70L100 90V230L130 260H170'/><circle cx='174' cy='260' r='4'/><path d='M0 300H40L70 330V420'/><circle cx='70' cy='424' r='4'/><path d='M0 320H110L140 350V470L110 500V560'/><circle cx='110' cy='564' r='4'/><path d='M0 480H30'/><circle cx='34' cy='480' r='4'/></g></svg>");
+  background-repeat: repeat-y;
+  background-position: left top;
+}
+
+/* About: the same traces, mirrored to come in from the right edge */
+#about.pcb {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='600' fill='none' stroke='%232ab7a9' stroke-opacity='0.38' stroke-width='1.6'><g transform='translate(220 0) scale(-1 1)'><path d='M0 40H90L120 70V160'/><circle cx='120' cy='164' r='4'/><path d='M0 60H70L100 90V230L130 260H170'/><circle cx='174' cy='260' r='4'/><path d='M0 300H40L70 330V420'/><circle cx='70' cy='424' r='4'/><path d='M0 320H110L140 350V470L110 500V560'/><circle cx='110' cy='564' r='4'/><path d='M0 480H30'/><circle cx='34' cy='480' r='4'/></g></svg>");
+  background-position: right top;
+}
+
+#projects h1 {
+  margin-bottom: 5vh;
+}
+
+/* phones: no circuit traces on About and Contact, the text fills the width and the lines would cross it */
+@media (max-width: 767px) {
+  #about.pcb,
+  #contact {
+    background-image: none;
+  }
+}
+
+/* Contact is centred left to right, like the hero, so the page opens and closes the same way */
+.contact-page {
+  text-align: center;
+}
+
+.contact-page > * {
+  width: 100%;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px 15px;
+  border-top: 1px solid var(--color-orange); /* orange line above the footer */
+  color: var(--color-orange);
+  font-size: 12pt;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* the one sentence under the Contact heading */
+.contact-note {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin-bottom: 3vh;
+}
+
+/* the GitHub and LinkedIn links use the same buttons as the hero */
+.contact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.contact-buttons .btn {
+  margin-right: 0; /* the gap does the spacing, so the pair stays truly centred */
+}
+
+/*
+	? Contact form
+	* a dark box with a quiet border, and dark fields inside it
+	* teal is the highlight: the field you are typing in gets a teal border and its label turns teal
+	* name and email sit side by side on wider screens (flex-wrap), stacked on a phone
+*/
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  max-width: 640px;
+  margin: 3vh auto 0;
+  text-align: left;
+  background-color: var(--color-bg-dark);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  padding: 2vh 30px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+/* teal border on hover and while typing */
+.contact-form:hover,
+.contact-form:focus-within {
+  border-color: var(--color-teal);
+}
+
+/* chip pins down both sides, like the legs of a chip on a board */
+.contact-form::before {
+  content: '';
+  position: absolute;
+  top: 25px;
+  bottom: 25px;
+  left: -10px;
+  right: -10px;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+        to bottom,
+        var(--color-pin) 0 3px,
+        transparent 3px 17px
+      )
+      left / 10px 100% no-repeat,
+    repeating-linear-gradient(
+        to bottom,
+        var(--color-pin) 0 3px,
+        transparent 3px 17px
+      )
+      right / 10px 100% no-repeat;
+}
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.field-row .field {
+  flex: 1 1 220px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* labels match the About readout labels: Chakra Petch, small capitals */
+.field label {
+  font-family: var(--font-digital);
+  font-size: 14pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transition: color 0.2s;
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  color: var(--color-text);
+  background-color: var(
+    --color-bg
+  ); /* a shade lighter than the box, so each field reads as a slot */
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  padding: 12px 15px;
+  transition: border-color 0.2s;
+}
+
+.field textarea {
+  resize: vertical;
+  height: 10vh; /* shorter on short screens so the page still fits */
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-teal);
+}
+
+/* :focus-within is true while you are typing inside that field */
+.field:focus-within label {
+  color: var(--color-teal);
+}
+
+.btn-send {
+  align-self: flex-start;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-bg);
+  background-color: var(--color-teal);
+  border: 1px solid var(--color-teal);
+  padding: 12px 20px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.btn-send:hover {
+  background-color: var(--color-teal-light);
+  border-color: var(--color-teal-light);
+}
+
+/*
+	? Section headings
+	* big headings with a thin line running to the edge of the section
+	* Contact is centred, so the line runs out on both sides
+	* About is left-aligned, so the line runs from the heading to the right edge
+	* the heading is a flex row: the lines are ::before / ::after with flex: 1, so they fill the leftover width
+*/
+#projects h1,
+#about h1,
+#contact h1 {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  font-size: 54px;
+  line-height: 1;
+}
+
+/* Projects heading has no side lines, so it is centred */
+#projects h1 {
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#contact h1::before,
+#contact h1::after,
+#about h1::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-teal-line);
+}
+
+/* the line under the Projects heading */
+.projects-note {
+  color: var(--color-text-dim);
+  margin: -40px auto 40px;
+  max-width: 600px;
+}
+
+/*
+	? One screen per page
+	* every page is exactly the height of the browser window: nav at the top, footer at the bottom,
+	  and the page's one section filling the space between
+	* 100dvh = the full visible height, including on phones where the address bar shrinks the screen
+	* headings and spacing use vh (a share of the screen height) so the content shrinks on short screens
+	* phones (under 768px) are allowed to scroll, because the longer pages cannot fit at readable sizes
+*/
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+main > section {
+  flex: 1;
+  min-height: 0;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+}
+
+/* each page gets its own spacing: About has more air above it, Contact sits higher to leave room for the form */
+#about {
+  padding-top: 6vh;
+}
+
+#contact {
+  padding-top: 3vh;
+}
+
+/*
+	? Reduced motion, CSS only
+	* if the visitor has asked their system to reduce motion, the hero video is hidden
+	* and the still poster image (images/hero-poster.jpg) is shown in its place
+*/
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none;
+  }
+
+  #hero {
+    background: url('../images/hero-poster.jpg') center / cover no-repeat;
+  }
+}
+
+/*
+	? Media Queries
+	* mobile first: everything above is the phone layout
+	* min-width adds rules as the screen gets wider
+*/
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  body {
+    height: 100dvh;
+    overflow: hidden; /* no scrolling: everything fits on one screen */
+  }
+
+  /* sizes follow the screen height (vh), so the page still fits on short screens */
+  #projects h1,
+  #about h1,
+  #contact h1 {
+    font-size: 8vh;
+  }
+
+  header,
+  section,
+  footer {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  header {
+    font-size: 15pt;
+  }
+
+  nav ul {
+    gap: 25px;
+  }
+
+  #hero h1 {
+    font-size: 8vh;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  #hero {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  #hero p {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-title {
+    font-size: 60px;
+  }
+
+  .contact-note {
+    font-size: 4vh;
+  }
+
+  .about-layout {
+    display: flex;
+    gap: var(--gap-section);
+  }
+
+  .readouts {
+    margin-top: 0;
+    width: 270px;
+    flex-shrink: 0;
+  }
+
+  .page-title {
+    font-size: 80px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  #projects h1,
+  #about h1,
+  #contact h1 {
+    font-size: 9vh;
+  }
+
+  #hero h1 {
+    font-size: 10vh;
+  }
+
+  .hero-title {
+    font-size: 56px;
+  }
+}
