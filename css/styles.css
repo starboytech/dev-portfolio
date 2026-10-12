@@ -464,9 +464,9 @@ section {
 footer {
   display: flex;
   justify-content: space-between;
-  padding: 25px 15px;
-  border-top: 1px solid var(--color-orange); /* orange line above the footer */
-  color: var(--color-orange);
+  padding: 13px 15px;
+  background-color: var(--color-orange);
+  color: var(--color-bg-dark); /* near-black text stays readable on the orange */
   font-size: 12pt;
 }
 
