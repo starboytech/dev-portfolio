@@ -36,6 +36,7 @@
   --color-teal-line: rgba(42, 183, 169, 0.4);
   --color-orange: #f2913d;
   --color-orange-light: #ffd29c;
+  --color-orange-dark: #c9691f;
   --color-glass: rgba(255, 255, 255, 0.04);
   --color-glass-edge: rgba(255, 255, 255, 0.14);
   --color-glass-shade: rgba(0, 0, 0, 0.55);
@@ -465,9 +466,16 @@ footer {
   display: flex;
   justify-content: space-between;
   padding: 13px 15px;
-  background-color: var(--color-orange);
+  background-color: var(--color-orange-dark);
   color: var(--color-bg-dark); /* near-black text stays readable on the orange */
   font-size: 12pt;
+}
+
+/* the home page keeps the plain footer: no fill, orange text, orange line above */
+footer.footer-plain {
+  background-color: transparent;
+  border-top: 1px solid var(--color-orange);
+  color: var(--color-orange);
 }
 
 footer p {
